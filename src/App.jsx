@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { fetchCoordinates } from './api/geo'
 import { fetchWeatherByCoords } from './api/weather'
 function App() {
-  const [city, setCity] = useState("")
+  const [city, setCity] = useState("seoul")
   const [weather, setWeather] = useState(null)
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState("")
@@ -24,10 +24,10 @@ function App() {
       setErr("")
 
       const { lat, lon, name, country } = await fetchCoordinates(q)
-    
+
       console.log(`${name}, ${country}`, lat, lon)
-    
-      const data =await fetchWeatherByCoords(lat,lon)
+
+      const data = await fetchWeatherByCoords(lat, lon)
       setWeather(data)
       setCity("")
 
@@ -55,10 +55,11 @@ function App() {
           {loading ? "검색중..." : "검색"}
         </button>
       </div>
-
       {err && <p className='error'>{err}</p>}
       {loading && <p className='info'>불러오는 중...</p>}
+
       <WeatherCard weather={weather} />
+
     </div>
 
   )
