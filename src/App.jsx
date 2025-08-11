@@ -51,7 +51,7 @@ function App() {
           onKeyUp={onKeyUp}
           // aria-lable ="도시명 입력"
           ref={inputRef} />
-        <button>
+        <button onClick={handleSearch} disabled={loading}>
           {loading ? "검색중..." : "검색"}
         </button>
       </div>
