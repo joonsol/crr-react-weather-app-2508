@@ -4,6 +4,7 @@ import WeatherCard from './components/WeatherCard'
 import { useEffect, useRef, useState } from 'react'
 import { fetchCoordinates } from './api/geo'
 import { fetchWeatherByCoords } from './api/weather'
+import {getColorByWeatherId} from './api/bgColor'
 function App() {
   const [city, setCity] = useState("")
   const [weather, setWeather] = useState(null)
@@ -34,14 +35,21 @@ function App() {
     } catch (error) {
       console.log(error)
 
+    }finally
+    {
+      setLoading(false)
     }
   }
   const onChnageInput = (e) => setCity(e.target.value)
   const onKeyUp = (e) => {
     if (e.key === 'Enter') handleSearch()
   }
+
+  const bgColor =weather?.weather?.[0].disabled? getColorByWeatherId(weather.weather[0].id):'#fff'
   return (
-    <div className='app'>
+    <section style={{ backgroundColor: bgColor, transition: 'background-color .3s ease' }}>
+
+    <div className='app' >
       <h1>날씨앱</h1>
       <div className="input-wrap">
         <input type="text"
@@ -60,6 +68,7 @@ function App() {
       {loading && <p className='info'>불러오는 중...</p>}
       <WeatherCard weather={weather} />
     </div>
+          </section>
 
   )
 }
