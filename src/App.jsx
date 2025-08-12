@@ -4,7 +4,7 @@ import WeatherCard from './components/WeatherCard'
 import { useEffect, useRef, useState } from 'react'
 import { fetchCoordinates } from './api/geo'
 import { fetchWeatherByCoords } from './api/weather'
-import {getColorByWeatherId} from './api/bgColor'
+import { getColorByWeatherId } from './api/bgColor'
 function App() {
   const [city, setCity] = useState("")
   const [weather, setWeather] = useState(null)
@@ -25,18 +25,17 @@ function App() {
       setErr("")
 
       const { lat, lon, name, country } = await fetchCoordinates(q)
-    
+
       console.log(`${name}, ${country}`, lat, lon)
-    
-      const data =await fetchWeatherByCoords(lat,lon)
+
+      const data = await fetchWeatherByCoords(lat, lon)
       setWeather(data)
       setCity("")
 
     } catch (error) {
       console.log(error)
 
-    }finally
-    {
+    } finally {
       setLoading(false)
     }
   }
@@ -44,31 +43,33 @@ function App() {
   const onKeyUp = (e) => {
     if (e.key === 'Enter') handleSearch()
   }
+  const bg = weather?.weather?.[0]?.id
+    ? getColorByWeatherId(weather.weather[0].id)
+    : 'linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%)';
 
-  const bgColor =weather?.weather?.[0].disabled? getColorByWeatherId(weather.weather[0].id):'#fff'
   return (
-    <section style={{ backgroundColor: bgColor, transition: 'background-color .3s ease' }}>
+    <section style={{ background: bg, minHeight: '100vh', transition: 'background .3s ease' }}>
 
-    <div className='app' >
-      <h1>날씨앱</h1>
-      <div className="input-wrap">
-        <input type="text"
-          placeholder=' 도시명을 입력하세요(예 Seoul, Busan)'
-          value={city}
-          onChange={onChnageInput}
-          onKeyUp={onKeyUp}
-          // aria-lable ="도시명 입력"
-          ref={inputRef} />
-        <button onClick={handleSearch} disabled={loading}>
-          {loading ? "검색중..." : "검색"}
-        </button>
+      <div className='app' >
+        <h1>Kim** 's Weather App</h1>
+        <div className="input-wrap">
+          <input type="text"
+            placeholder=' 도시명을 입력하세요(예 Seoul, Busan)'
+            value={city}
+            onChange={onChnageInput}
+            onKeyUp={onKeyUp}
+            // aria-lable ="도시명 입력"
+            ref={inputRef} />
+          <button onClick={handleSearch} disabled={loading}>
+            {loading ? "검색중..." : "검색"}
+          </button>
+        </div>
+
+        {err && <p className='error'>{err}</p>}
+        {loading && <p className='info'>불러오는 중...</p>}
+        <WeatherCard weather={weather} />
       </div>
-
-      {err && <p className='error'>{err}</p>}
-      {loading && <p className='info'>불러오는 중...</p>}
-      <WeatherCard weather={weather} />
-    </div>
-          </section>
+    </section>
 
   )
 }
